@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { Icon } from '../../../icon/icon';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const RightAligned = styled.div`
 	display: flex;
