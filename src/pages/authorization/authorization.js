@@ -1,15 +1,16 @@
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { server } from '../../../bff';
+import { server } from '../../bff';
 import { useState } from 'react';
 import styled from 'styled-components';
-import { Input } from '../../input/input';
-import { Button } from '../../button/button';
-import { Link } from 'react-router-dom';
-import { H2 } from '../../h2/h2';
+import { useResetForm } from '../../hooks';
+import { Input, Button, H2, AuthFormError } from '../../components';
+import { Link, Navigate } from 'react-router-dom';
 import { setUser } from '../../actions';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectUserRole } from '../../selectors';
+import { ROLE } from '../../bff/constants';
 
 const authFormSchema = yup.object().shape({
 	login: yup
@@ -36,16 +37,10 @@ const StyledLink = styled(Link)`
 	font-size: 18px;
 `;
 
-const ErrorMessage = styled.div`
-	margin: 10px 0 0;
-	padding: 10px;
-	font-size: 18px;
-	background-color: #fcadad;
-`;
-
 const AuthorizationContainer = ({ className }) => {
 	const {
 		register,
+		reset,
 		handleSubmit,
 		formState: { errors },
 	} = useForm({
@@ -57,14 +52,16 @@ const AuthorizationContainer = ({ className }) => {
 	});
 
 	const [serverError, setServerError] = useState();
-
 	const dispatch = useDispatch();
+
+	const roleId = useSelector(selectUserRole);
+
+	useResetForm(reset);
 
 	const onSubmit = ({ login, password }) => {
 		server.authotize(login, password).then(({ error, res }) => {
 			if (error) {
 				setServerError(`Ошибка запроса: ${error}`);
-				return;
 			}
 
 			dispatch(setUser(res));
@@ -73,6 +70,10 @@ const AuthorizationContainer = ({ className }) => {
 
 	const formError = errors?.login?.message || errors?.password?.message;
 	const errorMessage = formError || serverError;
+
+	if (roleId !== ROLE.GUEST) {
+		return <Navigate to="/" />;
+	}
 
 	return (
 		<div className={className}>
@@ -91,7 +92,7 @@ const AuthorizationContainer = ({ className }) => {
 				<Button type="submit" disabled={!!formError}>
 					Авторизоваться
 				</Button>
-				{errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
+				{errorMessage && <AuthFormError>{errorMessage}</AuthFormError>}
 				<StyledLink to="/register">Регистрация</StyledLink>
 			</form>
 		</div>
