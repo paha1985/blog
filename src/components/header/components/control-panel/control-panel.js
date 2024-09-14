@@ -1,24 +1,27 @@
 import styled from 'styled-components';
-import { Icon } from '../../../icon/icon';
+import { Button, Icon } from '../../../../components';
 import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+	selectUserRole,
+	selectUserLogin,
+	selectUserSession,
+} from '../../../../selectors';
+import { ROLE } from '../../../../bff/constants';
+import { logout } from '../../../../actions';
 
 const RightAligned = styled.div`
 	display: flex;
 	justify-content: flex-end;
-`;
-
-const StyledLink = styled(Link)`
-	display: flex;
-	justify-content: center;
 	text-align: center;
-	font-size: 18px;
-	width: 100px;
-	height: 32px;
-	border: 1px solid #000;
-	background-color: #eee;
 `;
 
-const StyledButton = styled.div`
+const UserName = styled.div`
+	font-size: 18px;
+	font-weight: bold;
+`;
+
+const StyledIcon = styled.div`
 	&:hover {
 		cursor: pointer;
 	}
@@ -26,15 +29,35 @@ const StyledButton = styled.div`
 
 const ControlPanelContainer = ({ className }) => {
 	const navigate = useNavigate();
+	const roleId = useSelector(selectUserRole);
+	const login = useSelector(selectUserLogin);
+	const session = useSelector(selectUserSession);
+	const dispatch = useDispatch();
+	console.log(roleId);
 	return (
 		<div className={className}>
 			<RightAligned>
-				<StyledLink to="/login">Войти</StyledLink>
+				{roleId === ROLE.GUEST ? (
+					<Button>
+						<Link to="/login">Войти</Link>
+					</Button>
+				) : (
+					<>
+						<UserName>{login}</UserName>
+						<StyledIcon>
+							<Icon
+								id="fa-sign-out"
+								margin=" 3px 0 0 12px"
+								onClick={() => dispatch(logout(session))}
+							/>
+						</StyledIcon>
+					</>
+				)}
 			</RightAligned>
 			<RightAligned>
-				<StyledButton onClick={() => navigate(-1)}>
+				<StyledIcon onClick={() => navigate(-1)}>
 					<Icon id="fa-backward" margin="10px 0 0 0" />
-				</StyledButton>
+				</StyledIcon>
 				<Link to="/post">
 					<Icon id="fa-file-text-o" margin="10px 0 0 16px" />
 				</Link>
