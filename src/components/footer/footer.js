@@ -2,20 +2,26 @@ import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 const FooterContainer = ({ className }) => {
-	const [city, setCity] = useState('');
-	const [temperature, setTemperature] = useState('');
-	const [weather, setWeather] = useState('');
+	const [city, setCity] = useState('Лондон');
+	const [temperature, setTemperature] = useState('15');
+	const [weather, setWeather] = useState('Тепло');
+
+	// useEffect(() => {
+	// 	fetch(
+	// 		'https://api.openweathermap.org/data/2.5/weather?q=London&units=metric&lang=ru&appid=8a320d2d663993c53fcde249b4a91868',
+	// 	)
+	// 		.then((res) => res.json())
+	// 		.then(({ name, main, weather }) => {
+	// 			setCity(name);
+	// 			setTemperature(Math.round(main.temp));
+	// 			setWeather(weather[0].description);
+	// 		});
+	// }, []);
 
 	useEffect(() => {
-		fetch(
-			'https://api.openweathermap.org/data/2.5/weather?q=Irkutsk&units=metric&lang=ru&appid=8a320d2d663993c53fcde249b4a91868',
-		)
-			.then((res) => res.json())
-			.then(({ name, main, weather }) => {
-				setCity(name);
-				setTemperature(Math.round(main.temp));
-				setWeather(weather[0].description);
-			});
+		setCity('Лондон');
+		setTemperature('15');
+		setWeather('Тепло');
 	}, []);
 
 	return (

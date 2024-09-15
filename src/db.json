@@ -4,22 +4,22 @@
       "id": "001",
       "login": "anton",
       "password": "qwerty123",
-      "registered_at": "2050-09-22",
+      "registered_at": "2050-09-22 08:32",
       "role_id": 0
     },
     {
       "id": "91a7",
       "login": "ivan",
       "password": "qwerty123",
-      "register_at": "2056-01-18 02:14",
+      "registered_at": "2056-01-18 02:14",
       "role_id": 2
     },
     {
       "id": "0f7a",
       "login": "paha",
       "password": "qwe123",
-      "register_at": "2040-06-13 08:32",
-      "role_id": 2
+      "registered_at": "2040-06-13 08:32",
+      "role_id": 0
     }
   ],
   "roles": [
