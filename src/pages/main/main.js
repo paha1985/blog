@@ -2,15 +2,22 @@ import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { PostCard } from './components';
 import { useServerRequest } from '../../hooks';
+import { PAGINATION_LIMIT } from '../../bff/constants';
+import { Pagination } from './components/pagination/pagination';
 
 const MainContainer = ({ className }) => {
 	const [posts, setPosts] = useState([]);
+	const [page, setPage] = useState(1);
+	const [lastPage, setLastPage] = useState(1);
 	const requestServer = useServerRequest();
+
 	useEffect(() => {
-		requestServer('fetchPosts').then((posts) => {
-			setPosts(posts.res);
+		requestServer('fetchPosts', page, PAGINATION_LIMIT).then((posts) => {
+			setPosts(posts.res.posts);
+			setLastPage(posts.res.maxPage);
 		});
-	}, [requestServer]);
+	}, [requestServer, page, lastPage]);
+
 	return (
 		<div className={className}>
 			<div className="post-list">
@@ -25,6 +32,7 @@ const MainContainer = ({ className }) => {
 					/>
 				))}
 			</div>
+			<Pagination page={page} setPage={setPage} lastPage={lastPage} />
 		</div>
 	);
 };
